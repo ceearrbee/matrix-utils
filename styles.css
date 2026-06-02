@@ -1,0 +1,143 @@
+:root {
+    --bg-color: #FFFFFF;
+    --text-color: #000000;
+    --text-muted: #595959;
+    --bg-hover: #F9F9F9;
+    --font-headline: 'Work Sans', system-ui, -apple-system, sans-serif;
+    --font-body: 'Bodoni Moda', ui-serif, Georgia, serif;
+    --border-color: #000000;
+    --focus-outline-color: #005fcc;
+}
+
+@media (prefers-color-scheme: dark) {
+    :root {
+        --bg-color: #000000;
+        --text-color: #FFFFFF;
+        --text-muted: #A6A6A6;
+        --bg-hover: #111111;
+        --border-color: #FFFFFF;
+        --focus-outline-color: #4da6ff;
+    }
+}
+
+*, *::before, *::after {
+    box-sizing: border-box;
+}
+
+html, body {
+    margin: 0;
+    padding: 0;
+    background-color: var(--bg-color);
+    color: var(--text-color);
+    font-family: var(--font-body);
+}
+
+body {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 80px 24px;
+}
+
+.page {
+    width: 100%;
+    max-width: 720px;
+}
+
+header h1 {
+    font-family: var(--font-headline);
+    font-weight: 900;
+    font-size: 3em;
+    line-height: 0.95;
+    margin: 0 0 16px 0;
+    text-transform: uppercase;
+    letter-spacing: -1px;
+}
+
+header p {
+    font-size: 1.2em;
+    color: var(--text-muted);
+    margin: 0 0 48px 0;
+}
+
+.utils {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.util {
+    margin-bottom: 24px;
+}
+
+.util a {
+    display: block;
+    border: 1px solid var(--border-color);
+    padding: 32px;
+    text-decoration: none;
+    color: var(--text-color);
+    background-color: var(--bg-color);
+    transition: background-color 0.2s, color 0.2s;
+}
+
+.util a:hover,
+.util a:focus {
+    background-color: var(--text-color);
+    color: var(--bg-color);
+    outline: none;
+}
+
+.util a:focus-visible {
+    outline: 2px solid var(--focus-outline-color);
+    outline-offset: 2px;
+}
+
+.util h2 {
+    font-family: var(--font-headline);
+    font-weight: 900;
+    font-size: 1.8em;
+    margin: 0 0 12px 0;
+    text-transform: uppercase;
+}
+
+.util p {
+    font-size: 1.1em;
+    margin: 0;
+    color: var(--text-muted);
+}
+
+.util a:hover p,
+.util a:focus p {
+    color: var(--bg-color);
+}
+
+footer {
+    margin-top: 48px;
+    font-family: var(--font-headline);
+    font-weight: 600;
+    font-size: 0.85em;
+    color: var(--text-muted);
+}
+
+footer a {
+    color: inherit;
+}
+
+@media (max-width: 768px) {
+    body {
+        padding: 40px 16px;
+    }
+
+    header h1 {
+        font-size: 2.2em;
+    }
+
+    .util a {
+        padding: 24px;
+    }
+
+    .util h2 {
+        font-size: 1.5em;
+    }
+}

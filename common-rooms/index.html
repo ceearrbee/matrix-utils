@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!--
+      CSP for static (GitHub Pages) hosting  no server headers available, so it
+      is set via meta. connect-src must allow arbitrary https because the user
+      chooses which homeserver to contact. No inline script (app.js is external).
+    -->
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self'; font-src 'self'; connect-src https:; img-src https: data:; base-uri 'self'; form-action 'self'">
+    <!-- Don't leak this app's URL to the user-chosen (possibly untrusted) homeserver. -->
+    <meta name="referrer" content="no-referrer">
+    <title>Matrix Mutuals</title>
+    <meta name="description" content="Find common Matrix rooms with another user using the MSC2666 API.">
+    <link rel="stylesheet" href="../fonts.css">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <aside class="info-sidebar">
+        <div class="title-card">
+            <h1>Matrix Mutuals</h1>
+            <p>Using <a href="https://github.com/matrix-org/matrix-spec-proposals/pull/2666">MSC2666</a>, see if you share any rooms with a user! </p>
+        </div>
+    </aside>
+
+    <main id="main-content" class="main-content">
+        <div class="main-nav">
+            <!-- Login View -->
+            <section id="login-view" class="nav-item form-container">
+                <h2>Connect Account</h2>
+                <form id="login-form">
+                    <div class="input-group">
+                        <label for="hs-url">Homeserver URL or Domain</label>
+                        <input type="text" id="hs-url" placeholder="matrix.org" required>
+                    </div>
+                    <div class="input-group">
+                        <label for="username">Username / Matrix ID</label>
+                        <input type="text" id="username" placeholder="@user:matrix.org">
+                    </div>
+                    <div class="input-group">
+                        <label for="password">Password</label>
+                        <input type="password" id="password" placeholder="••••••••">
+                    </div>
+                    <div class="actions">
+                        <button type="submit" class="btn">Login w/ Password</button>
+                        <button type="button" id="btn-sso" class="btn">Login w/ SSO</button>
+                        <button type="button" id="btn-test-login" class="btn">Test Server</button>
+                    </div>
+                </form>
+                <div id="login-error" class="error-msg hidden" role="status" aria-live="polite"></div>
+            </section>
+
+            <!-- Dashboard View -->
+            <section id="dashboard-view" class="nav-item form-container hidden">
+                <div class="dashboard-header">
+                    <h2>Find Mutual Rooms</h2>
+                    <div>
+                        <button id="btn-test" class="btn">Test Support</button>
+                        <button id="btn-logout" class="btn">Logout</button>
+                    </div>
+                </div>
+                <div id="test-support-result" class="error-msg hidden" role="status" aria-live="polite"></div>
+                <form id="search-form">
+                    <div class="input-group">
+                        <label for="target-user-id">Target User ID</label>
+                        <input type="text" id="target-user-id" placeholder="@target_user:mozilla.org" required>
+                    </div>
+                    <div class="actions">
+                        <button type="submit" class="btn">Find Mutual Rooms</button>
+                    </div>
+                </form>
+                <div id="search-error" class="error-msg hidden" role="status" aria-live="polite"></div>
+
+                <div id="results-container" class="hidden">
+                    <h3 id="results-title" aria-live="polite"></h3>
+                    <div id="loader" class="loader hidden">Searching...</div>
+                    <ul id="rooms-list" class="rooms-list"></ul>
+                </div>
+            </section>
+        </div>
+    </main>
+
+    <script type="module" src="app.js"></script>
+</body>
+</html>
