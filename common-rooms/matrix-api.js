@@ -3,6 +3,9 @@
 
 // Scheme prepended when the user enters a bare domain without a protocol. Kept
 // in config (not inlined) so deployment/protocol choices live in one place.
+
+// This was cribbed from a bunch of places and massaged, yikes?
+
 export const DEFAULT_HS_SCHEME = 'https://';
 
 // MSC2666 (mutual rooms) was never stabilized into a released spec version,
@@ -76,8 +79,8 @@ export async function checkMsc2666Support(hs) {
     const unstable = data.unstable_features || {};
     const supported = MSC2666_FLAGS.some(flag => unstable[flag] === true);
     return supported
-        ? '✅ Server advertises support for MSC2666 (mutual rooms).'
-        : '⚠️ Server does not advertise MSC2666 support. The lookup may still fail; try anyway.';
+        ? 'Server advertises support for MSC2666 (mutual rooms).'
+        : 'Server does not advertise MSC2666 support. The lookup may still fail; try anyway.';
 }
 
 export async function fetchMutualRooms(targetUserId, homeserverUrl, authedFetch) {
