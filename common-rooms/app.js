@@ -1,4 +1,4 @@
-esimport {
+import {
     resolveHomeserver,
     randomState,
     checkMsc2666Support,
