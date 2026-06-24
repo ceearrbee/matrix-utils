@@ -1,0 +1,11 @@
+{
+  "name": "matrix-room-reforge",
+  "version": "1.0.0",
+  "description": "Re-version a Matrix room and toggle its encryption by recreating it (tombstone and all).",
+  "type": "module",
+  "private": true,
+  "scripts": {
+    "test": "node --test"
+  },
+  "license": "AGPL-3.0"
+}

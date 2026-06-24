@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!--
+      CSP for static (GitHub Pages) hosting: no server headers available, so it
+      is set via meta. connect-src must allow arbitrary https because the user
+      chooses which homeserver to contact. No inline script (app.js is external).
+    -->
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self'; font-src 'self'; connect-src https:; img-src https: data:; base-uri 'self'; form-action 'self'">
+    <!-- Don't leak this app's URL to the user-chosen (possibly untrusted) homeserver. -->
+    <meta name="referrer" content="no-referrer">
+    <title>Matrix Room Reforge</title>
+    <meta name="description" content="Upgrade a Matrix room to a new version and change its encryption by re-creating it, tombstone and all.">
+    <link rel="stylesheet" href="../fonts.css">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <aside class="info-sidebar">
+        <div class="title-card">
+            <h1>Matrix Room Re-Forge</h1>
+            <p>Upgrade a Matrix room <em>and</em> turn its encryption on or off, by recreating it as a brand-new room, with the tombstone, power levels, and member invites a normal upgrade would do.</p>
+	    <p>This is hand crafted and therefore not known to be trustworthy, use at your own risk (I tried though!)!</p>
+        </div>
+    </aside>
+
+    <main id="main-content" class="main-content">
+        <div class="main-nav">
+            <!-- Login View -->
+            <section id="login-view" class="nav-item form-container">
+                <h2>Connect Account</h2>
+                <form id="login-form">
+                    <div class="input-group">
+                        <label for="hs-url">Homeserver URL or Domain</label>
+                        <input type="text" id="hs-url" placeholder="matrix.org" required>
+                    </div>
+                    <div class="input-group">
+                        <label for="username">Username / Matrix ID</label>
+                        <input type="text" id="username" placeholder="@user:matrix.org">
+                    </div>
+                    <div class="input-group">
+                        <label for="password">Password</label>
+                        <input type="password" id="password" placeholder="••••••••">
+                    </div>
+                    <div class="actions">
+                        <button type="submit" class="btn">Login with Password</button>
+                        <button type="button" id="btn-sso" class="btn">Login with SSO</button>
+                    </div>
+                </form>
+                <div id="login-error" class="error-msg hidden" role="status" aria-live="polite"></div>
+            </section>
+
+            <!-- Dashboard View -->
+            <section id="dashboard-view" class="nav-item form-container hidden">
+                <div class="dashboard-header">
+                    <h2>Upgrade a Room</h2>
+                    <div>
+                        <button id="btn-logout" class="btn">Logout</button>
+                    </div>
+                </div>
+                <div id="whoami" class="whoami"></div>
+
+                <!-- Step 1: configure -->
+                <form id="upgrade-form">
+                    <div class="input-group">
+                        <label for="room-id">Room ID to upgrade</label>
+                        <input type="text" id="room-id" placeholder="!abcdef:matrix.org" required>
+                    </div>
+                    <div class="input-group">
+                        <label for="room-version">Target room version</label>
+                        <select id="room-version"></select>
+                    </div>
+                    <div class="input-group">
+                        <label for="encryption-mode">Encryption</label>
+                        <select id="encryption-mode">
+                            <option value="keep" selected>Keep the old room's setting</option>
+                            <option value="on">Encrypt the new room</option>
+                            <option value="off">Leave the new room unencrypted</option>
+                        </select>
+                    </div>
+                    <div class="input-group">
+                        <label for="invite-mode">Members</label>
+                        <select id="invite-mode">
+                            <option value="all" selected>Invite everyone (joined + already invited)</option>
+                            <option value="joined">Invite currently-joined members only</option>
+                            <option value="none">Don't invite anyone</option>
+                        </select>
+                    </div>
+                    <div class="input-group">
+                        <label for="tombstone-message">Tombstone message (shown in the old room)</label>
+                        <input type="text" id="tombstone-message" placeholder="This room has been upgraded.">
+                    </div>
+                    <div class="actions">
+                        <button type="submit" class="btn">Preview Upgrade</button>
+                    </div>
+                </form>
+                <div id="upgrade-error" class="error-msg hidden" role="status" aria-live="polite"></div>
+
+                <!-- Step 2: confirm the plan -->
+                <div id="plan-container" class="hidden">
+                    <h3>Upgrade plan</h3>
+                    <ul id="plan-list" class="plan-list"></ul>
+                    <div class="checkbox-group">
+                        <label class="checkbox-label">
+                            <input type="checkbox" id="confirm-ack">
+                            <span id="confirm-ack-text">I understand this is irreversible: the old room will be tombstoned and frozen, and any members are invited (not force-joined) to the new room.</span>
+                        </label>
+                    </div>
+                    <div class="actions">
+                        <button type="button" id="btn-perform" class="btn" disabled>Perform Upgrade</button>
+                        <button type="button" id="btn-download" class="btn">Download Plan (JSON)</button>
+                        <button type="button" id="btn-cancel" class="btn">Cancel</button>
+                    </div>
+                </div>
+
+                <!-- Step 3: progress log -->
+                <div id="log-container" class="hidden">
+                    <h3>Progress</h3>
+                    <div id="log-busy" class="log-busy hidden" aria-hidden="true">
+                        <span class="spinner"></span> Working…
+                    </div>
+                    <ul id="log-list" class="log-list" role="log" aria-live="polite" aria-busy="false"></ul>
+                    <div id="result-summary" class="result-summary hidden" role="status" aria-live="polite"></div>
+                </div>
+            </section>
+        </div>
+    </main>
+
+    <script type="module" src="app.js"></script>
+</body>
+</html>
