@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!--
+      CSP for static (GitHub Pages) hosting — no server headers available, so it
+      is set via meta. connect-src must allow arbitrary https because the user
+      chooses which homeserver to contact. No inline script (app.js is external).
+    -->
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self'; font-src 'self'; connect-src https:; img-src https: data:; base-uri 'self'; form-action 'self'">
+    <!-- Don't leak this app's URL to the user-chosen (possibly untrusted) homeserver. -->
+    <meta name="referrer" content="no-referrer">
+    <title>Room Permissions</title>
+    <meta name="description" content="See your power level and what you can do in every Matrix room you're in.">
+    <link rel="stylesheet" href="../fonts.css">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <aside class="info-sidebar">
+        <div class="title-card">
+            <h1>Room Permissions</h1>
+            <p>Log in and see, for every room you're in, your power level and exactly what you can and can't do.</p>
+            <p>Read-only — it never changes anything. Hand-crafted, so use at your own risk (I tried though!).</p>
+        </div>
+    </aside>
+
+    <main id="main-content" class="main-content">
+        <div class="main-nav">
+            <!-- Login View -->
+            <section id="login-view" class="nav-item form-container">
+                <h2>Connect Account</h2>
+                <form id="login-form">
+                    <div class="input-group">
+                        <label for="hs-url">Homeserver URL or Domain</label>
+                        <input type="text" id="hs-url" placeholder="matrix.org" required>
+                    </div>
+                    <div class="input-group">
+                        <label for="username">Username / Matrix ID</label>
+                        <input type="text" id="username" placeholder="@user:matrix.org">
+                    </div>
+                    <div class="input-group">
+                        <label for="password">Password</label>
+                        <input type="password" id="password" placeholder="••••••••">
+                    </div>
+                    <div class="actions">
+                        <button type="submit" class="btn">Login with Password</button>
+                        <button type="button" id="btn-sso" class="btn">Login with SSO</button>
+                    </div>
+                </form>
+                <div id="login-error" class="error-msg hidden" role="status" aria-live="polite"></div>
+            </section>
+
+            <!-- Dashboard View -->
+            <section id="dashboard-view" class="nav-item form-container hidden">
+                <div class="dashboard-header">
+                    <h2>Your Permissions</h2>
+                    <div>
+                        <button id="btn-export" class="btn">Export CSV</button>
+                        <button id="btn-refresh" class="btn">Refresh</button>
+                        <button id="btn-logout" class="btn">Logout</button>
+                    </div>
+                </div>
+                <div id="whoami" class="whoami" aria-live="polite"></div>
+                <div id="dash-error" class="error-msg hidden" role="status" aria-live="polite"></div>
+
+                <div id="scan-status" class="scan-status hidden" role="status" aria-live="polite">
+                    <span class="spinner" aria-hidden="true"></span>
+                    <span id="scan-text">Scanning…</span>
+                </div>
+
+                <div id="results" class="results hidden">
+                    <div id="standing-summary" class="standing-summary"></div>
+                    <details id="matrix-details" class="section-details">
+                        <summary>Permissions grid (all rooms)</summary>
+                        <div id="matrix-body"></div>
+                    </details>
+                    <div class="list-controls">
+                        <input type="text" id="filter-input" class="filter-input" placeholder="Filter by name, alias, or ID…" aria-label="Filter rooms">
+                        <select id="filter-mode" class="filter-mode" aria-label="Quick filter">
+                            <option value="all">All rooms</option>
+                            <option value="admin">Where I'm an admin (100+/∞)</option>
+                            <option value="mod">Where I'm a moderator (50+)</option>
+                            <option value="cantpost">Where I can't post</option>
+                            <option value="spaces">Spaces only</option>
+                        </select>
+                        <label class="privacy-toggle" title="Hide room names/addresses and your username so the page is safe to share publicly">
+                            <input type="checkbox" id="privacy-mode"> Privacy mode
+                        </label>
+                        <span id="filter-count" class="filter-count" aria-live="polite"></span>
+                    </div>
+                    <div id="room-list" class="room-list"></div>
+                </div>
+            </section>
+        </div>
+    </main>
+
+    <script type="module" src="app.js"></script>
+</body>
+</html>

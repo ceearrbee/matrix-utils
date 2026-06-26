@@ -1,0 +1,11 @@
+{
+  "name": "matrix-room-perms",
+  "version": "1.0.0",
+  "description": "Inspect your power level and what you can/can't do in every Matrix room you're joined to.",
+  "type": "module",
+  "private": true,
+  "scripts": {
+    "test": "node --test"
+  },
+  "license": "AGPL-3.0"
+}
